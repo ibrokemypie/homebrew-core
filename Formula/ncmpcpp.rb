@@ -1,7 +1,7 @@
 class Ncmpcpp < Formula
   desc "Ncurses-based client for the Music Player Daemon"
   homepage "https://rybczak.net/ncmpcpp/"
-  url "https://ncmpcpp.rybczak.net/stable/ncmpcpp-0.7.7.tar.bz2"
+  url "https://rybczak.net/ncmpcpp/stable/ncmpcpp-0.7.7.tar.bz2"
   sha256 "b7bcbec83b1f88cc7b21f196b10be09a27b430566c59f402df170163464d01ef"
   revision 1
 
@@ -13,11 +13,12 @@ class Ncmpcpp < Formula
   end
 
   head do
-    url "git://repo.or.cz/ncmpcpp.git"
+    url "https://github.com/arybczak/ncmpcpp.git"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
+    depends_on "ncurses"
   end
 
   deprecated_option "outputs" => "with-outputs"
@@ -61,12 +62,9 @@ class Ncmpcpp < Formula
     args << "--enable-visualizer" if build.with? "visualizer"
     args << "--enable-clock" if build.with? "clock"
 
-    if build.head?
-      # Also runs configure
-      system "./autogen.sh", *args
-    else
-      system "./configure", *args
-    end
+    system "./autogen.sh" if build.head?
+    system "./configure", *args
+    system "make"
     system "make", "install"
   end
 
