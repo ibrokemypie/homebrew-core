@@ -108,6 +108,7 @@ class Mpd < Formula
     system "make", "install"
 
     (etc/"mpd").install "doc/mpdconf.example" => "mpd.conf"
+    ohai "When launching as a service with a non-standard config location, append '<string>$mpdconfigpath</string>' before the closing array tag in ~/Library/LaunchAgents/#{homebrew.mxcl.mpd}.plist"
   end
 
   plist_options :manual => "mpd"
@@ -119,12 +120,13 @@ class Mpd < Formula
     <dict>
         <key>Label</key>
         <string>#{plist_name}</string>
+        <key>ProcessType</key>
+        <string>Interactive</string>
         <key>WorkingDirectory</key>
         <string>#{HOMEBREW_PREFIX}</string>
         <key>ProgramArguments</key>
         <array>
             <string>#{opt_bin}/mpd</string>
-            <string>--no-daemon</string>
         </array>
         <key>RunAtLoad</key>
         <true/>
